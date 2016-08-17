@@ -1,0 +1,21 @@
+﻿TOPIC
+	about_CalenderTool
+
+SHORT DESCRIPTION
+	Helps creating ICS files from tabular data which can be imported into Outlook or other mail clients later on.
+
+LONG DESCRIPTION
+	Get template for supported columns, which can be pasted to excel.
+	Fill out columns in excel and create ICS file:
+	Get-Clipboard | ConvertTo-ICS
+
+EXAMPLES
+	Get-EntryTemplate | Set-Clipboard
+
+	Get-Clipboard | ConvertTo-ICS
+
+KEYWORDS
+	ICS Calender
+
+SEE ALSO
+	 

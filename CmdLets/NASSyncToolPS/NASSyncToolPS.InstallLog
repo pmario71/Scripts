@@ -1,0 +1,44 @@
+﻿Assembly D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   assemblypath = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll
+   logfile = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.InstallLog
+Keine öffentlichen Installer mit dem RunInstallerAttribute.Yes-Attribut in der Assembly D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll gefunden.
+Assembly D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll wird ausgeführt.
+Betroffene Parameter:
+   logtoconsole = 
+   assemblypath = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll
+   logfile = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.InstallLog
+Keine öffentlichen Installer mit dem RunInstallerAttribute.Yes-Attribut in der Assembly D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll gefunden.
+Die InstallState-Datei wird entfernt, da keine Installer vorhanden sind.
+Assembly D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   assemblypath = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll
+   logfile = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.InstallLog
+Assembly D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll wird ausgeführt.
+Betroffene Parameter:
+   logtoconsole = 
+   assemblypath = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll
+   logfile = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.InstallLog
+Assembly D:\Tools\Scripts\CmdLets\NASSyncToolPS\NASSyncToolPS.dll wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   assemblypath = D:\Tools\Scripts\CmdLets\NASSyncToolPS\NASSyncToolPS.dll
+   logfile = D:\Tools\Scripts\CmdLets\NASSyncToolPS\NASSyncToolPS.InstallLog
+Assembly D:\Tools\Scripts\CmdLets\NASSyncToolPS\NASSyncToolPS.dll wird zurückgesetzt.
+Betroffene Parameter:
+   logtoconsole = 
+   assemblypath = D:\Tools\Scripts\CmdLets\NASSyncToolPS\NASSyncToolPS.dll
+   logfile = D:\Tools\Scripts\CmdLets\NASSyncToolPS\NASSyncToolPS.InstallLog
+Während der Rollbackphase des Installers NASSyncToolPS.SyncToolPsSnapIn ist eine Ausnahme aufgetreten.
+System.UnauthorizedAccessException: Der Zugriff auf den Registrierungsschlüssel "HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns" wurde verweigert.
+Während der Rollbackphase der Installation ist eine Ausnahme aufgetreten. Diese Ausnahme wird ignoriert, und der Rollback wird fortgesetzt. Der ursprüngliche Zustand des Computers wird jedoch möglicherweise nicht vollständig wiederhergestellt, nachdem der Rollback beendet ist.
+Assembly D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll wird deinstalliert.
+Betroffene Parameter:
+   logtoconsole = 
+   assemblypath = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.dll
+   logfile = D:\Projects\Tools\NASSyncToolPS\NASSyncToolPS\bin\Debug\NASSyncToolPS.InstallLog
+Während der Deinstallation des Installers NASSyncToolPS.SyncToolPsSnapIn ist eine Ausnahme aufgetreten.
+System.UnauthorizedAccessException: Der Zugriff auf den Registrierungsschlüssel "HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns" wurde verweigert.
+Während der Deinstallation ist eine Ausnahme aufgetreten. Diese Ausnahme wird ignoriert, und die Deinstallation wird fortgesetzt. Die Anwendung wird jedoch möglicherweise nicht vollständig deinstalliert.
