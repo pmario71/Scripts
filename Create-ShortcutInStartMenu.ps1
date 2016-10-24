@@ -1,5 +1,10 @@
 <#
-    
+.Synopsis
+   Creates a start menu shortcut for a given executable.
+.DESCRIPTION
+   Creates a start menu shortcut for a given executable.
+.EXAMPLE
+   Create-ShortcutInStartMenu -shortCutTarget D:\Tools\Development\Expresso\Expresso.exe -folder Tools\Dev
 #>
 function Create-ShortcutInStartMenu {
     [CmdletBinding()]
@@ -9,14 +14,14 @@ function Create-ShortcutInStartMenu {
         [ValidateScript({ test-path $_ })]
         [string]$ShortcutTarget,
 
-        # Name of the shortcut (optional)
-        [Parameter(Mandatory=$false)]
-        [string]$Name,
-
         # Start menu location
         [Parameter(Mandatory=$true)]
         #[ValidateSet('Tools')]
-        [string]$Folder
+        [string]$Folder,
+
+        # Name of the shortcut (optional), otherwise it is derived from the exe name.
+        [Parameter(Mandatory=$false)]
+        [string]$Name
     )
     
     begin 
@@ -47,5 +52,3 @@ function Create-ShortcutInStartMenu {
         $WScriptShell = $null
     }
 }
-
-Create-ShortcutInStartMenu -shortCutTarget D:\Tools\Development\Expresso\Expresso.exe -folder Tools\Dev
