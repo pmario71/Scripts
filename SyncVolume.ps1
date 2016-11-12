@@ -18,13 +18,13 @@ function Sync-Volume
         [Parameter(Mandatory=$true)]
         [string]
         [ValidateScript( { Test-Path $_ } )]
-        $target, 
+        $TargetPath, 
 
         # Hilfebeschreibung zu Param2
         [Parameter(Mandatory=$true)]
         [string]
         [ValidateScript( { Test-Path $_ } )]
-        $copy
+        $PathToCopy
     )
 
     Begin
@@ -33,8 +33,8 @@ function Sync-Volume
     Process
     {
         # 
-        $org = Get-ChildItem -Path x:\ -Recurse
-        $cpy = Get-ChildItem -Path w:\ -Recurse
+        $org = Get-ChildItem -Path $TargetPath -Recurse
+        $cpy = Get-ChildItem -Path $PathToCopy -Recurse
 
         $res = Compare-Object -ReferenceObject $org -DifferenceObject $cpy
 
