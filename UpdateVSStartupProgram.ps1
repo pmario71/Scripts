@@ -1,4 +1,9 @@
-﻿<#
+﻿$PSx64Path = 'C:\WINDOWS\syswow64\WindowsPowerShell\v1.0\powershell.exe'
+$PSx86Path = 'c:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe'
+
+$ns = 'http://schemas.microsoft.com/developer/msbuild/2003'
+
+<#
 .Synopsis
    Sets the startup program for Visual Studio projects
 .DESCRIPTION
@@ -30,9 +35,7 @@ function Update-VSStartupProgram
         $ErrorActionPreference = "Stop"
 
         $prj = $ProjectPath 
-        #(Get-Item -Path "$ProjectFolder\*.csproj")[0].FullName
         $prjUser = "$prj.user"
-        #(Get-Item -Path "$ProjectFolder\*.csproj.user")[0].FullName
 
         [xml]$prjCfg = Get-Content $prj
         [xml]$userCfg = Get-Content $prjUser
@@ -58,11 +61,7 @@ function Update-VSStartupProgram
             if( ($userGroups -eq $null) -or  # if no projects configure, always add group
                 ($userGroups | where { $_.Condition.Trim() -match $pg.Condition.Trim() }).Count -eq 0 )  # otherwise only missing are added
             {
-                #$node = $userCfg.ImportNode($PropertyGroupDefinition.W.PropertyGroup, $true)
                 CreateEmptyPropertyGroup $userCfg $pg.Condition
-                                
-                #$c = $userCfg.Project.AppendChild($element)
-                #$c.Condition = $pg.Condition
             }
         }
 
@@ -98,23 +97,6 @@ function CreateEmptyPropertyGroup ($userCfg, $condition)
     $userCfg.Project.AppendChild($pg)
 }
 
-$PSx64Path = 'C:\WINDOWS\syswow64\WindowsPowerShell\v1.0\powershell.exe'
-$PSx86Path = 'c:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe'
-
-$ns = 'http://schemas.microsoft.com/developer/msbuild/2003'
-
-[xml]$PropertyGroupDefinition = @"
-<w xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<PropertyGroup Condition="'`$(Configuration)|`$(Platform)' == 'Debug|AnyCPU'">
-    <StartAction>??</StartAction>
-    <StartProgram>??</StartProgram>
-    <StartArguments>??</StartArguments>
-    <StartWorkingDirectory></StartWorkingDirectory>
-  </PropertyGroup>
-</w>
-"@
-
-
 function SetPS ($userCfg, $target)
 {
     foreach($propGroup in $userCfg.Project.PropertyGroup)
@@ -128,16 +110,33 @@ function SetPS ($userCfg, $target)
             $PSPath = $PSx86Path
         }
 
-        $propGroup.StartAction = 'Program'
-        $propGroup.StartProgram = $PSPath
-        $propGroup.StartArguments = "-NoExit -NoProfile -Command `"&{ Import-Module `'.\$target`' }`""
-        $propGroup.StartWorkingDirectory = '' # unset
+        AddElem $propGroup 'StartAction' 'Program'
+        AddElem $propGroup 'StartProgram' $PSPath
+        AddElem $propGroup 'StartArguments' "-NoExit -NoProfile -Command `"&{ Import-Module `'.\$target`' }`""
+        AddElem $propGroup 'StartWorkingDirectory' '' # unset
     }
 }
 
-function CreatePropertyGroup($root)
+function AddElem ($element, [string]$attrName, [string]$value)
 {
-    $root.AddChild($PropertyGroupDefinition)
+    $a = $element[$attrName]
+    if (!$a)
+    {
+        $a = $element.OwnerDocument.CreateElement($attrName, $ns)
+        $element.AppendChild($a)
+    }
+    $a.InnerText = $value
+}
+
+function AddAttr ($element, [string]$attrName, [string]$value)
+{
+    $a = $element.GetAttributeNode($attrName)
+    if (!$a)
+    {
+        $a = $element.OwnerDocument.CreateAttribute($attrName)
+        $element.Attributes.Append($a)
+    }
+    $a.Value = $value
 }
 
 function AskToContinue($proj)
