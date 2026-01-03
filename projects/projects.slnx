@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/HelperLib.Tests/HelperLib.Tests.csproj" />
+  </Folder>
+  <Project Path="HelperLib/HelperLib.csproj" />
+ 
+</Solution>

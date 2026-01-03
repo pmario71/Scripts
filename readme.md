@@ -6,3 +6,6 @@ Repo of powershell scripts, now focused on running on MacBook.
 
 
 ## Installation
+
+location for scripts & tools:  `/Users/pmario/Local/tools`
+
