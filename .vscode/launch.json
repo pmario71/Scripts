@@ -6,8 +6,8 @@
             "type": "PowerShell",
             "request": "launch",
             // "program": "D:\\Tools\\Scripts\\Find-Book.ps1",
-            "args": [],
-            "program": "${file}"
+            "args": ["-PhotoPath", "/Users/pmario/Local/Todo"],
+            "script": "${file}"
         },
         {
             "name": "PowerShell x86",
@@ -15,7 +15,7 @@
             "request": "launch",
             // "program": "D:\\Tools\\Scripts\\Find-Book.ps1",
             "args": [],
-            "program": "${file}"
+            "script": "${file}"
         }
     ]
 }

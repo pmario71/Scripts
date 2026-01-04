@@ -33,7 +33,7 @@ public class XmpHelper_PROTO_Tests
 
         // 2. Locate the attribute (using the exif namespace)
         var description = doc.Descendants(rdf + "Description").FirstOrDefault();
-        string dateString = description?.Attribute(exif + "DateTimeOriginal")?.Value;
+        string? dateString = description?.Attribute(exif + "DateTimeOriginal")?.Value;
 
         if (!string.IsNullOrEmpty(dateString))
         {
