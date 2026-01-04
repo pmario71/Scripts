@@ -1,18 +1,17 @@
-﻿using System.Globalization;
-using System.Xml.Linq;
-
-namespace HelperLib.Tests;
+﻿namespace HelperLib.Tests;
 
 public class XmpHelperTests
 {
     private readonly ITestOutputHelper _output;
-    readonly string _xmpFile = "/Users/pmario/Projects/Scripts/projects/tests/HelperLib.Tests/TestData/Photo/XMP/DSC05043.ARW.xmp";
+
+    readonly string _xmpFile =
+        "/Users/pmario/Projects/Scripts/projects/tests/HelperLib.Tests/TestData/Photo/XMP/DSC05043.ARW.xmp";
 
     public XmpHelperTests(ITestOutputHelper output)
     {
         _output = output;
     }
-    
+
     [Fact]
     public void ReadXmpFileTest()
     {
@@ -22,83 +21,34 @@ public class XmpHelperTests
     }
 
     [Fact]
-    public void ReadXmpFileTest2()
+    public void ReadDateTimeOriginalTest()
     {
         var xmpDoc = XmpHelper.ReadXmpFile(_xmpFile);
-        
+
         DateTime? result = XmpHelper.ReadDateTimeOriginal(xmpDoc);
-        
+
         Assert.NotNull(result);
-        Assert.Equal(new DateTime(year:2023, month:10, day:1, hour:14, minute:29, second:55), result);
+        Assert.Equal(new DateTime(year: 2023, month: 10, day: 1, hour: 14, minute: 29, second: 55), result);
     }
 
-
-    [Fact]
-    public void Prototyping_ReadDateTimeOriginal()
+    [Theory]
+    [InlineData("/test/2023/file.xmp", 2023)]
+    [InlineData("/test/2023/other/file.xmp", 2023)]
+    [InlineData("/2025/some/other/file.xmp", 2025)]
+    [InlineData("/test/xxx/other/file.xmp", -1)]
+    [InlineData("/test/1899/other/file.xmp", -1)]
+    [InlineData("/test/2122/other/file.xmp", -1)]
+    public void ExtractYearFromPathTest(string path, int expectedYear)
     {
-        string xmpSnippet = @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<x:xmpmeta xmlns:x=""adobe:ns:meta/"" x:xmptk=""XMP Core 4.4.0-Exiv2"">
- <rdf:RDF xmlns:rdf=""http://www.w3.org/1999/02/22-rdf-syntax-ns#"">
-  <rdf:Description rdf:about=""""
-    xmlns:exif=""http://ns.adobe.com/exif/1.0/""
-    exif:DateTimeOriginal=""2023:10:01 14:29:55.000"">
-  </rdf:Description>
- </rdf:RDF>
-</x:xmpmeta>";
+        int? result = XmpHelper.ExtractYearFromPath(path);
 
-        XDocument doc = XDocument.Parse(xmpSnippet);
-
-        // 1. Define the necessary namespaces
-        XNamespace rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-        XNamespace exif = "http://ns.adobe.com/exif/1.0/";
-
-        // 2. Locate the attribute (using the exif namespace)
-        var description = doc.Descendants(rdf + "Description").FirstOrDefault();
-        string dateString = description?.Attribute(exif + "DateTimeOriginal")?.Value;
-
-        if (!string.IsNullOrEmpty(dateString))
+        if (expectedYear != 0)
         {
-            // 3. Parse the Exif-style date format
-            // Format uses colons for the date: "yyyy:MM:dd HH:mm:ss.fff"
-            string format = "yyyy:MM:dd HH:mm:ss.fff";
-            
-            if (DateTime.TryParseExact(dateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
-            {
-                _output.WriteLine($"Successfully parsed: {result}");
-            }
-            else
-            {
-                _output.WriteLine("Failed to parse date string.");
-            }
+            Assert.Equal(expectedYear, result!);
         }
-    }
-
-    [Fact]
-    public void Prototyping_ValidateParser_over_all_xmp_files()
-    {
-        const string sourcePath = "/Users/pmario/Local/Todo";
-        
-        int cntErrors = 0;
-        int cntFilesFound = 0;
-        
-        var xmpFiles = Directory.EnumerateFiles(sourcePath, "*.xmp", SearchOption.AllDirectories);
-        foreach (var xmpFile in xmpFiles)
+        else
         {
-            var xmpDoc = XmpHelper.ReadXmpFile(xmpFile);
-            DateTime? result = XmpHelper.ReadDateTimeOriginal(xmpDoc);
-            if (result == null)
-            {
-                cntErrors++;
-                _output.WriteLine($"[{cntErrors}] {xmpFile}");
-            }
-
-            cntFilesFound++;
+            Assert.Null(result);
         }
-        
-        _output.WriteLine($"Files found      : {cntFilesFound}");
-        _output.WriteLine($"Files with errors: {cntErrors}");
-        
-        Assert.Equal(0, cntErrors);
-        Assert.True(cntFilesFound > 10);
     }
 }

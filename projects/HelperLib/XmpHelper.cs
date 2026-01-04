@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace HelperLib;
 
@@ -9,7 +10,48 @@ public static class XmpHelper
     static readonly XNamespace Exif = "http://ns.adobe.com/exif/1.0/";
     
     const string DateFormat = "yyyy:MM:dd HH:mm:ss.fff";
-public static XDocument ReadXmpFile(string path)
+
+    public static IEnumerable<string> ValidateYear(string sourcePath)
+    {
+        
+        var xmpFilePaths = Directory.EnumerateFiles(sourcePath, "*.xmp", SearchOption.AllDirectories);
+        foreach (var path in xmpFilePaths)
+        {
+            
+        }
+
+        return xmpFilePaths;
+    }
+
+    public static int ExtractYearFromPath(string sourcePath)
+    {
+        var currentPath = sourcePath.AsSpan();
+        while (true)
+        {
+            ReadOnlySpan<char> directoryPath = Path.GetDirectoryName(currentPath);
+            
+            if (directoryPath.IsEmpty)
+                return -1;
+            
+            var directoryName = Path.GetFileName(directoryPath);
+
+            if (directoryName.Length == 4 && int.TryParse(directoryName, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result))
+            {
+                if (result is >= 1900 and <= 2100)
+                    return result;
+            }
+            currentPath = directoryPath;
+        }
+
+        return -1;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static XDocument ReadXmpFile(string path)
     {
         var doc = XDocument.Load(path);
         return doc;
