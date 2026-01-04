@@ -11,16 +11,37 @@ public static class XmpHelper
     
     const string DateFormat = "yyyy:MM:dd HH:mm:ss.fff";
 
+
+    /// <summary>
+    /// Extracts year from xmp file and checks if it corresponds with year in filepath.
+    /// It returns a list of validation or other errors.
+    /// </summary>
+    /// <param name="sourcePath"></param>
+    /// <returns>list of validation or parse errors</returns>
     public static IEnumerable<string> ValidateYear(string sourcePath)
     {
-        
         var xmpFilePaths = Directory.EnumerateFiles(sourcePath, "*.xmp", SearchOption.AllDirectories);
         foreach (var path in xmpFilePaths)
         {
-            
-        }
+            var doc = ReadXmpFile(path);
 
-        return xmpFilePaths;
+            var dt = ReadDateTimeOriginal(doc);
+            if (dt == null)
+            {
+                yield return $"(parse error) year from xmp file: {path}";
+            }
+            var yearFromPath = ExtractYearFromPath(path);
+
+            if (yearFromPath == -1)
+            {
+                yield return $"(parse error) year from path: {path}";
+            }
+
+            if (dt!.Value.Year != yearFromPath)
+            {
+                yield return $"(validation error) year from path: {yearFromPath}, year in xmp: {dt.Value.Year}";
+            }
+        }
     }
 
     public static int ExtractYearFromPath(string sourcePath)
