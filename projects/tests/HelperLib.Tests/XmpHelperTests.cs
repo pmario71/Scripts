@@ -51,4 +51,23 @@ public class XmpHelperTests
             Assert.Null(result);
         }
     }
+
+    [Fact]
+    public void ValidateXmpDateTimeOriginalWithPathYearTest()
+    {
+        var result = XmpHelper.ValidateYear(
+            "/Users/pmario/Projects/Scripts/projects/tests/HelperLib.Tests/TestData/Photo").ToArray();
+        
+        foreach (var err in result)
+        {
+            _output.WriteLine(err.ToString());
+        }
+        
+        Assert.Equal(2, result.Count());
+        Assert.Equal(ErrorType.ValidationError, result[0].ErrorType);
+        Assert.Contains("year from path: 2025, year in xmp: 2023", result[0].ErrorMsg);
+        
+        Assert.Equal(ErrorType.ParseError, result[1].ErrorType);
+        Assert.Contains("year from path:", result[1].ErrorMsg);
+    }
 }
