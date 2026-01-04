@@ -7,18 +7,23 @@ fi
 CONTAINER_NAME="pwsh"
 IMAGE_NAME="mcr.microsoft.com/powershell:latest"
 
+docker_run() {
+    docker run -it --name $CONTAINER_NAME \
+        --mount type=bind,source=/mnt,target=/mnt \
+        -v pwsh_history:/root/.local/share/powershell/ \
+        --workdir /mnt \
+        $IMAGE_NAME \
+        pwsh
+}
+
 # 1. Check if the container exists and get its status
 STATUS=$(docker inspect -f '{{.State.Status}}' $CONTAINER_NAME 2>/dev/null)
 
 if [ $? -ne 0 ]; then
     echo "No container named '$CONTAINER_NAME' found. Starting fresh..."
+    docker_run
 
-    docker run -it --name $CONTAINER_NAME \
-        --mount type=bind,source=/mnt,target=/mnt \
-        -v pwsh_history:/root/.local/share/powershell/PSReadLine/ \
-        --workdir /mnt \
-        $IMAGE_NAME \
-        pwsh
+    echo "Use [Ctrl + P + Q] to detach from the container without stopping it."
 
     exit 0
 fi
@@ -48,12 +53,9 @@ case $choice in
         docker rm -f $CONTAINER_NAME
 
         echo "Starting fresh session ..."
-        docker run -it --name $CONTAINER_NAME \
-            --mount type=bind,source=/mnt,target=/mnt \
-            -v pwsh_history:/root/.local/share/powershell/PSReadLine/ \
-            --workdir /mnt \
-            $IMAGE_NAME \
-            pwsh
+        docker_run
+        
+        echo "Use [Ctrl + P + Q] to detach from the container without stopping it."
         ;;
     *)
         echo "Invalid choice. Exiting."
