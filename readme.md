@@ -14,3 +14,9 @@ Folders          | Content
 location for scripts & tools:  
 
     `/Users/pmario/Local/tools`
+
+## Notes
+
+* the idea was to carve out more compute intensive work into `HelperLib` 
+* marshalling data across is however challenging
+* Copilot suggested to define a serialization format (using | as a separator), which increases efforts and resource consumption on both ends
