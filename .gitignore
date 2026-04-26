@@ -1,7 +1,9 @@
 # my changes
 
 **/*.lscache
-.vs/*
+
+.vs/
+
 
 # Windows image file caches
 Thumbs.db
