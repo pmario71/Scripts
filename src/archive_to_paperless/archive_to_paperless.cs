@@ -1,5 +1,4 @@
-﻿
-// to publish, use `cp archive_to_paperless.cs /Users/pmario/Local/tools/archive_to_paperless.cs`
+﻿// to publish, use `cp archive_to_paperless.cs /Users/pmario/Local/tools/archive_to_paperless.cs`
 
 using System;
 using System.IO;
@@ -13,15 +12,23 @@ internal class Program
     
     internal static int Main(string[] args)
     {
-        IFileSystem fileSystem = new FileSystem();
+        IFileSystem fs = new FileSystem();
         
+
         if (args.Length == 0)
         {
             Console.Error.WriteLine("No arguments provided.\n");
+            PrintHelp();
             return 1;
         }
 
-        if (!Directory.Exists(NASDropPath))
+        if (args.Length == 1 && (args[0] == "--help" || args[0] == "-h"))
+        {
+            PrintHelp();
+            return 0;
+        }
+
+        if (!fs.Directory.Exists(NASDropPath))
         {
             Console.Error.WriteLine($"NAS drop path not mounted / found:  {NASDropPath}\n");
             return 1;
@@ -37,14 +44,14 @@ internal class Program
             //     continue;
             // }
 
-            if (!File.Exists(arg))
+            if (!fs.File.Exists(arg))
             {
                 Console.Error.WriteLine($"File not found:  {arg}\n");
                 continue;
             }
             try
             {
-                ProcessFile(fileSystem, arg);
+                ProcessFile(fs, arg);
             }
             catch (Exception ex)
             {
@@ -60,6 +67,21 @@ internal class Program
 
         Console.WriteLine("SUCCESS!");
         return result;
+    }
+
+    private static void PrintHelp()
+    {
+        Console.WriteLine("Usage: archive_to_paperless <file1> [file2 ...]");
+        Console.WriteLine("Copies files to the NAS drop folder and archives them locally.");
+        Console.WriteLine();
+        Console.WriteLine("Arguments:");
+        Console.WriteLine("  <file1> [file2 ...]   One or more files to process.");
+        Console.WriteLine();
+        Console.WriteLine("Options:");
+        Console.WriteLine("  -h, --help            Show this help message and exit.");
+        Console.WriteLine();
+        Console.WriteLine($"NAS Drop Path: {NASDropPath}");
+        Console.WriteLine($"Archive Path:  {ArchivePath}");
     }
 
     internal static FileResult ProcessFile(IFileSystem fs, string arg)
