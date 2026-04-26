@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="publishArchive_to_paperless.ps1" />
+  </Folder>
   <Project Path="archive_to_paperless.tests/archive_to_paperless.tests.csproj" />
   <Project Path="archive_to_paperless/archive_to_paperless.csproj" />
 </Solution>
