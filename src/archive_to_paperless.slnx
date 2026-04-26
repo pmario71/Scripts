@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="archive_to_paperless.tests/archive_to_paperless.tests.csproj" />
+  <Project Path="archive_to_paperless/archive_to_paperless.csproj" />
+</Solution>

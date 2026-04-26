@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishAot>true</PublishAot>
+    <PackAsTool>true</PackAsTool>
+    <UserSecretsId>archive_to_paperless-9e56a7c84b196cebc9a6945654dc0a6fcbd500ab0851e1f83ab6ba67398631b2</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+		<InternalsVisibleTo Include="archive_to_paperless.tests" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" Version="22.1.1" />
+  </ItemGroup>
+
+</Project>
