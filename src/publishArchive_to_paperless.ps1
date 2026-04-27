@@ -2,7 +2,7 @@
 
 $projectPath = "archive_to_paperless/archive_to_paperless.csproj"
 $outputDir = "publish-macos"
-$toolsDir = $env:tools
+$toolsDir = "/Users/pmario/Local/tools"
 
 # Publish with AOT for MacOS (x64)
 dotnet publish $projectPath `
