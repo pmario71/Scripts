@@ -12,8 +12,8 @@ public class ProgramTests
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") },
         });
-        fs.AddDirectory(Program.ArchivePath);
-        fs.AddDirectory(Program.NASDropPath);
+        fs.AddDirectory(Program._ArchivePath);
+        fs.AddDirectory(Program._NASDropPath);
         
         // Act
         var result = Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
@@ -29,9 +29,9 @@ public class ProgramTests
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") },
-            { $"{Program.NASDropPath}/testfile.pdf", new MockFileData("Content of file") },
+            { $"{Program._NASDropPath}/testfile.pdf", new MockFileData("Content of file") },
         });
-        fs.AddDirectory(Program.ArchivePath);
+        fs.AddDirectory(Program._ArchivePath);
         
         // Act
         var result = Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
@@ -48,9 +48,9 @@ public class ProgramTests
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime } },
-            { $"{Program.ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime } },
+            { $"{Program._ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime } },
         });
-        fs.AddDirectory(Program.NASDropPath);
+        fs.AddDirectory(Program._NASDropPath);
         
         // Act
         var result = Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
@@ -68,9 +68,9 @@ public class ProgramTests
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime1 } },
-            { $"{Program.ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime2 } },
+            { $"{Program._ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime2 } },
         });
-        fs.AddDirectory(Program.NASDropPath);
+        fs.AddDirectory(Program._NASDropPath);
         
         // Act
         var result = Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
@@ -87,8 +87,8 @@ public class ProgramTests
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime } },
-            { $"{Program.NASDropPath}/testfile.pdf", new MockFileData("Content of file") },
-            { $"{Program.ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime } },
+            { $"{Program._NASDropPath}/testfile.pdf", new MockFileData("Content of file") },
+            { $"{Program._ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime } },
         });
         
         // Act
@@ -107,8 +107,8 @@ public class ProgramTests
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime1 } },
-            { $"{Program.NASDropPath}/testfile.pdf", new MockFileData("Content of file") },
-            { $"{Program.ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime2 } },
+            { $"{Program._NASDropPath}/testfile.pdf", new MockFileData("Content of file") },
+            { $"{Program._ArchivePath}/testfile.pdf", new MockFileData("Content of file") { LastWriteTime = writeTime2 } },
         });
         
         // Act
@@ -126,14 +126,14 @@ public class ProgramTests
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") },
         });
-        fs.AddDirectory(Program.ArchivePath);
-        fs.AddDirectory(Program.NASDropPath);
+        fs.AddDirectory(Program._ArchivePath);
+        fs.AddDirectory(Program._NASDropPath);
         
         // Act
         Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
         
         // Assert
-        Assert.True(fs.File.Exists($"{Program.NASDropPath}/testfile.pdf"));
+        Assert.True(fs.File.Exists($"{Program._NASDropPath}/testfile.pdf"));
     }
 
     [Fact]
@@ -144,14 +144,14 @@ public class ProgramTests
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") },
         });
-        fs.AddDirectory(Program.ArchivePath);
-        fs.AddDirectory(Program.NASDropPath);
+        fs.AddDirectory(Program._ArchivePath);
+        fs.AddDirectory(Program._NASDropPath);
         
         // Act
         Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
         
         // Assert
-        Assert.True(fs.File.Exists($"{Program.ArchivePath}/testfile.pdf"));
+        Assert.True(fs.File.Exists($"{Program._ArchivePath}/testfile.pdf"));
         Assert.False(fs.File.Exists("/sourcefolder/testfile.pdf"));
     }
 
@@ -162,15 +162,15 @@ public class ProgramTests
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("Content of file") },
-            { $"{Program.NASDropPath}/testfile.pdf", new MockFileData("Existing content") },
+            { $"{Program._NASDropPath}/testfile.pdf", new MockFileData("Existing content") },
         });
-        fs.AddDirectory(Program.ArchivePath);
+        fs.AddDirectory(Program._ArchivePath);
         
         // Act
         Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
         
         // Assert
-        var nasFileContent = fs.File.ReadAllText($"{Program.NASDropPath}/testfile.pdf");
+        var nasFileContent = fs.File.ReadAllText($"{Program._NASDropPath}/testfile.pdf");
         Assert.Equal("Existing content", nasFileContent);
     }
 
@@ -182,15 +182,15 @@ public class ProgramTests
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "/sourcefolder/testfile.pdf", new MockFileData("New content") { LastWriteTime = writeTime } },
-            { $"{Program.ArchivePath}/testfile.pdf", new MockFileData("Existing content") { LastWriteTime = writeTime } },
+            { $"{Program._ArchivePath}/testfile.pdf", new MockFileData("Existing content") { LastWriteTime = writeTime } },
         });
-        fs.AddDirectory(Program.NASDropPath);
+        fs.AddDirectory(Program._NASDropPath);
         
         // Act
         Program.ProcessFile(fs, "/sourcefolder/testfile.pdf");
         
         // Assert
-        var archiveFileContent = fs.File.ReadAllText($"{Program.ArchivePath}/testfile.pdf");
+        var archiveFileContent = fs.File.ReadAllText($"{Program._ArchivePath}/testfile.pdf");
         Assert.Equal("Existing content", archiveFileContent);
         Assert.True(fs.File.Exists("/sourcefolder/testfile.pdf"));
     }
