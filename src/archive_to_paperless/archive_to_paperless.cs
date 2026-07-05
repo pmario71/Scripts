@@ -1,19 +1,25 @@
 ﻿// to publish, use `cp archive_to_paperless.cs /Users/pmario/Local/tools/archive_to_paperless.cs`
 
-using System;
-using System.IO;
 using System.IO.Abstractions;
+using System.Diagnostics;
+using System.Text;
+
+namespace archive_to_paperless;
 
 internal class Program
 {
-    internal const string ArchivePath = "/Users/pmario/Local/archived";
-    internal const string NASDropPath = "/Volumes/dropfolders/paperless";
+    internal const string _ArchivePath = "/Users/pmario/Local/archived";
+    // internal const string NASDropPath = "/Volumes/dropfolders/paperless";
+
+    internal const string _NASDropPathRel = "/dropfolders/paperless";
+    internal const string _NASDropPath = $"/Volumes{_NASDropPathRel}";
+    internal const string _serverName = "//contrib@truenas";
+
     // const string NASDropMount = "//contrib@truenas._smb._tcp.local/dropfolders";
-    
+
     internal static int Main(string[] args)
     {
         IFileSystem fs = new FileSystem();
-        
 
         if (args.Length == 0)
         {
@@ -28,11 +34,13 @@ internal class Program
             return 0;
         }
 
-        if (!fs.Directory.Exists(NASDropPath))
+        if (EnsureNASMounted(_serverName, _NASDropPathRel) != ErrorCodes.SUCCESS)
         {
-            Console.Error.WriteLine($"NAS drop path not mounted / found:  {NASDropPath}\n");
-            return 1;
+            return (int)ErrorCodes.PREREQ_FAILED;
         }
+
+        // ensure archive folder exists
+        fs.Directory.CreateDirectory(_ArchivePath);
 
         int result = 0;
         foreach (var arg in args)
@@ -80,15 +88,15 @@ internal class Program
         Console.WriteLine("Options:");
         Console.WriteLine("  -h, --help            Show this help message and exit.");
         Console.WriteLine();
-        Console.WriteLine($"NAS Drop Path: {NASDropPath}");
-        Console.WriteLine($"Archive Path:  {ArchivePath}");
+        Console.WriteLine($"NAS Drop Path: {_NASDropPath}");
+        Console.WriteLine($"Archive Path:  {_ArchivePath}");
     }
 
     internal static FileResult ProcessFile(IFileSystem fs, string arg)
     {
         var fileName = fs.Path.GetFileName(arg);
-        var destPath = fs.Path.Combine(NASDropPath, fileName);
-        
+        var destPath = fs.Path.Combine(_NASDropPath, fileName);
+
         FileResult result = FileResult.Success;
 
         if (!fs.File.Exists(destPath))
@@ -99,8 +107,8 @@ internal class Program
         {
             result = FileResult.AlreadyArchived;
         }
-        
-        var archiveDestPath = fs.Path.Combine(ArchivePath, fileName);
+
+        var archiveDestPath = fs.Path.Combine(_ArchivePath, fileName);
         if (fs.File.Exists(archiveDestPath))
         {
             if (fs.File.GetLastWriteTimeUtc(archiveDestPath) == fs.File.GetLastWriteTimeUtc(arg))
@@ -120,6 +128,54 @@ internal class Program
         }
         return result;
     }
+
+    internal static ErrorCodes EnsureNASMounted(string serverPath, string relPath)
+    {
+        if (Directory.Exists(Path.Combine("/Volume", relPath)))
+        {
+            return ErrorCodes.SUCCESS;
+        }
+
+        string mountPath = Path.Combine("/Volumes", relPath);
+
+        var psi = new ProcessStartInfo
+        {
+            FileName = "/sbin/mount_smbfs",
+            Arguments = $"{Path.Combine(serverPath, relPath)} {mountPath}",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+
+        var process = Process.Start(psi);
+
+        if (process == null)
+        {
+            Console.Error.WriteLine("Failed to execute 'mount_smbfs'");
+            return ErrorCodes.PREREQ_FAILED;
+        }
+
+        if (!process.WaitForExit(5_000))
+        {
+            var sb = new StringBuilder("Executing'mount_smbfs' timed out!");
+            sb.AppendLine(process.StandardError.ReadToEnd());
+            sb.AppendLine(process.StandardOutput.ReadToEnd());
+
+            Console.Error.WriteLine(sb);
+            return ErrorCodes.PREREQ_FAILED;
+        }
+
+        return ErrorCodes.SUCCESS;
+    }
+}
+
+enum ErrorCodes
+{
+    SUCCESS = 0,
+    PREREQ_FAILED = 1,
+    COPY_FAILED = -1,
+
+    // public static implicit operator int(ErrorCodes value) => (int)value;
 }
 
 internal enum FileResult
